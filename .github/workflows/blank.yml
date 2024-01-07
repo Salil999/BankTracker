@@ -12,6 +12,9 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
+            - name: Checkout the repository
+              uses: actions/checkout@v2
+
             - name: run scraper
               run: |
                   echo Running 'python scrape.py'
@@ -20,12 +23,7 @@ jobs:
     setup:
         runs-on: ubuntu-latest
 
-        # Steps represent a sequence of tasks that will be executed as part of the job
         steps:
-            # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-            - name: Checkout the repository
-              uses: actions/checkout@v2
-
             - name: Set up Python
               uses: actions/setup-python@v2
               with:

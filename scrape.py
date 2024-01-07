@@ -1,7 +1,25 @@
-from splinter import Browser, Config
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.utils import ChromeType
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 
-my_config = Config(headless = False)
+chrome_service = Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install())
 
-with Browser('chrome', config = my_config) as browser:
-    browser.visit('https://www.google.com/')
-    print(browser.title)
+chrome_options = Options()
+options = [
+    "--headless",
+    "--disable-gpu",
+    "--window-size=1920,1200",
+    "--ignore-certificate-errors",
+    "--disable-extensions",
+    "--no-sandbox",
+    "--disable-dev-shm-usage"
+]
+for option in options:
+    chrome_options.add_argument(option)
+
+driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
+
+driver.get('https://google.com')
+print(driver.title)

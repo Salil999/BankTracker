@@ -36,8 +36,8 @@ jobs:
 
             - name: Installing splinter
               run: |
-                  echo Running 'pip install splinter'
-                  pip install splinter
+                  echo Running 'pip install requests beautifulsoup4 pandas webdriver-manager selenium'
+                  pip install requests beautifulsoup4 pandas webdriver-manager selenium
 
             - name: run scraper
               run: |

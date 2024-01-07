@@ -7,23 +7,13 @@ on:
     workflow_dispatch:
 
 jobs:
-    scrape:
-        needs: setup
+    setup:
         runs-on: ubuntu-latest
 
         steps:
             - name: Checkout the repository
               uses: actions/checkout@v2
 
-            - name: run scraper
-              run: |
-                  echo Running 'python scrape.py'
-                  python scrape.py
-
-    setup:
-        runs-on: ubuntu-latest
-
-        steps:
             - name: Set up Python
               uses: actions/setup-python@v2
               with:
@@ -48,3 +38,8 @@ jobs:
               run: |
                   echo Running 'pip install splinter'
                   pip install splinter
+
+            - name: run scraper
+              run: |
+                  echo Running 'python scrape.py'
+                  python scrape.py

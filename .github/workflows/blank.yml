@@ -22,7 +22,7 @@ jobs:
             - name: Installing splinter
               run: |
                   echo Running 'pip install -r requirements.txt'
-                  pip install requests beautifulsoup4
+                  pip install -r requirements.txt
 
             - name: Run scraper
               run: |

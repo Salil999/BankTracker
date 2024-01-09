@@ -38,7 +38,7 @@ def is_allowed(scraper: Scraper):
     return (hour / TOTAL_HOURS) < marker <= ((hour + 1) / TOTAL_HOURS)
 
 def is_new_file(file_name: str):
-    os.path.getsize(file_name) == 0
+    return not os.path.exists(file_name) or os.path.getsize(file_name) == 0
 
 if __name__ == '__main__':
     rates = []
@@ -70,7 +70,6 @@ if __name__ == '__main__':
             with open(file=file_name, mode='a+', newline='') as f:
                 writer = csv.DictWriter(f, fieldnames=['date', 'rate', 'name'])
                 if f.tell() == 0:
-                    logger.info(f'New file: {file_name}')
                     writer.writeheader()
                     writer.writerow(rate)
         else:

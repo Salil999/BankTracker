@@ -2,7 +2,7 @@ name: scrape
 
 on:
     schedule:
-        - cron: '0 0 * * *'
+        - cron: '0 * * * *'
 
     workflow_dispatch:
 
@@ -19,27 +19,14 @@ jobs:
               with:
                   python-version: 3.12
 
-            - name: Remove Chrome
-              run: |
-                  echo Running 'sudo apt purge google-chrome-stable'
-                  sudo apt purge google-chrome-stable
-
-            - name: Remove Chrome
-              run: |
-                  echo Running 'sudo apt purge chromium-browser'
-                  sudo apt purge chromium-browser
-
-            - name: Install Chrome
-              run: |
-                  echo Running 'sudo apt install -y chromium-browser'
-                  sudo apt install -y chromium-browser
-
             - name: Installing splinter
               run: |
-                  echo Running 'pip install requests beautifulsoup4 pandas webdriver-manager selenium'
-                  pip install requests beautifulsoup4 pandas webdriver-manager selenium
+                  echo Running 'pip install requests beautifulsoup4'
+                  pip install requests beautifulsoup4
 
-            - name: run scraper
+            - name: Run scraper
               run: |
                   echo Running 'python scrape.py'
                   python scrape.py
+            - name: Git Commit/Push Changes
+              uses: actions-x/commit@v6

@@ -21,12 +21,13 @@ jobs:
 
             - name: Installing splinter
               run: |
-                  echo Running 'pip install requests beautifulsoup4'
+                  echo Running 'pip install -r requirements.txt'
                   pip install requests beautifulsoup4
 
             - name: Run scraper
               run: |
                   echo Running 'python scrape.py'
                   python scrape.py
+
             - name: Git Commit/Push Changes
               uses: actions-x/commit@v6

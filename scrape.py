@@ -50,38 +50,46 @@ if __name__ == '__main__':
         # else:
         #     logger.info(f'Running scraper for {scraper.NAME}')
 
-        rate = scraper.extract()
-        logger.info(f'Rate: {rate}')
-        if rate >= 0:
-            rates.append({
-                'date': datetime.datetime.now().isoformat(timespec='milliseconds'),
-                'rate': rate,
-                'name': scraper.NAME,
-            })
+        extracted_data = scraper.extract()
+        logger.info(f'Extracted data: {extracted_data} for {scraper.NAME}')
+        for data in extracted_data:
+            logger.info(f'Rate data: {data}')
+            if data.rate >= 0:
+                rates.append({
+                    'date': datetime.datetime.now().isoformat(timespec = 'milliseconds'),
+                    'rate': data.rate,
+                    'name': scraper.NAME,
+                    'type': data.type
+                })
 
-    os.makedirs('rates', exist_ok=True)
+    os.makedirs('rates', exist_ok = True)
 
     logger.info(f'Writing rates to {len(rates)} files')
 
     for rate in rates:
-        file_name = f'rates/{rate["name"]}.csv'
+        institution_name = rate.pop('name')
+        file_name = f'rates/{institution_name}.csv'
         if is_new_file(file_name):
             logger.info(f'New file: {file_name}')
-            with open(file=file_name, mode='a+', newline='') as f:
-                writer = csv.DictWriter(f, fieldnames=['date', 'rate', 'name'])
+            with open(file = file_name, mode = 'a+', newline = '') as f:
+                writer = csv.DictWriter(f, fieldnames = ['date', 'rate', 'type'])
                 if f.tell() == 0:
                     writer.writeheader()
                     writer.writerow(rate)
         else:
             logger.info(f'Existing file: {file_name}')
-            with open(file=file_name, mode='r', newline='') as f:
-                reader = csv.DictReader(f, fieldnames=['date', 'rate', 'name'])
+            with open(file = file_name, mode = 'r', newline = '') as f:
+                reader = csv.DictReader(f, fieldnames = ['date', 'rate', 'type'])
+
                 last_line = next(reader) # skip the header
+                # get the last line with the same type
                 for line in reader:
-                    last_line = line
+                    if line['type'] == rate['type']:
+                        last_line = line
+                
                 # only write a new entry if the rate has changed from the last known value
                 if float(last_line['rate']) != rate['rate']:
                     logger.info(f'Updating file: {file_name}')
-                    with open(file=file_name, mode='a+', newline='') as f:
-                        writer = csv.DictWriter(f, fieldnames=['date', 'rate', 'name'])
+                    with open(file = file_name, mode = 'a+', newline = '') as f:
+                        writer = csv.DictWriter(f, fieldnames = ['date', 'rate', 'type'])
                         writer.writerow(rate)

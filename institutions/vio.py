@@ -16,5 +16,4 @@ class VioBankScraper(Scraper):
         html_content = requests.get(self.url,headers={'User-Agent': ua.random}).text
         soup = BeautifulSoup(html_content, 'html.parser')
         rates = soup.find_all("span", class_="featured-product--rate")
-        return -1 # broken for now
-        # return rates[0]
+        return [] # broken for now

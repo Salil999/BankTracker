@@ -1,7 +1,6 @@
 import requests
 from fake_useragent import UserAgent
-from institutions.base_scraper import Scraper
-from bs4 import BeautifulSoup
+from institutions.base_scraper import Scraper, ExtractedResult
 
 class PenFedScraper(Scraper):
 
@@ -14,12 +13,18 @@ class PenFedScraper(Scraper):
     def extract(self) -> float:
         ua = UserAgent()
         try:
-            rates = requests.get(self.url, headers = {'User-Agent': ua.random}, timeout=5).json()
+            rates = requests.get(self.url, headers = {'User-Agent': ua.random}, timeout = 10).json()
         except requests.exceptions.Timeout:
-            return -1
-        savings_rate_key = 'Premium Online Savings APY'
+            return []
+        # getting these keys based off of https://www.penfed.org/savings
+        keys = set([
+            'Premium Online Savings APY', # savings
+            'MM Cert Mo15 APY', # money market
+        ])
+        rates = []
         for d in rates:
             key = d['name']
-            if key == savings_rate_key:
-                return float(d['rate'])
-        return -1
+            rate = float(d['rate'])
+            if key in keys:
+                rates.append(ExtractedResult(rate = rate, type = key))
+        return rates

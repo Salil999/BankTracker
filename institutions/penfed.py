@@ -23,8 +23,5 @@ class PenFedScraper(Scraper):
         ])
         rates = []
         for d in rates:
-            key = d['name']
-            rate = float(d['rate'])
-            if key in keys:
-                rates.append(ExtractedResult(rate = rate, type = key))
+            rates.append(ExtractedResult(rate = float(d['rate']), type = d['name']))
         return rates

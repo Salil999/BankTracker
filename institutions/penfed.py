@@ -10,7 +10,7 @@ class PenFedScraper(Scraper):
     def __init__(self):
         super().__init__(PenFedScraper.NAME, PenFedScraper.URL)
 
-    def extract(self) -> float:
+    def extract(self) -> ExtractedResult:
         ua = UserAgent()
         try:
             rates = requests.get(self.url, headers = {'User-Agent': ua.random}, timeout = 10).json()

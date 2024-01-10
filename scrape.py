@@ -25,7 +25,7 @@ def get_scrapers() -> List[Scraper]:
 
 # Attempts to evenly distribute scrapers across 24 hours
 # We can lower the granularity from hours to minutes if too many scrapers are running in a single hour
-def is_allowed(scraper: Scraper):
+def is_allowed(scraper: Scraper) -> bool:
     md5_hash = hashlib.md5(scraper.NAME.encode('utf-8'))
     hashed_integer = int(md5_hash.hexdigest(), 16)
     marker = hashed_integer / MAX_MD5_HASH_VALUE
@@ -37,18 +37,18 @@ def is_allowed(scraper: Scraper):
 
     return (hour / TOTAL_HOURS) < marker <= ((hour + 1) / TOTAL_HOURS)
 
-def is_new_file(file_name: str):
+def is_new_file(file_name: str) -> bool:
     return not os.path.exists(file_name) or os.path.getsize(file_name) == 0
 
 if __name__ == '__main__':
     rates = []
     for klass in get_scrapers():
         scraper = klass()
-        # if not is_allowed(scraper):
-        #     logger.info(f'Skipping scraper for {scraper.NAME}')
-        #     continue
-        # else:
-        #     logger.info(f'Running scraper for {scraper.NAME}')
+        if not is_allowed(scraper):
+            logger.info(f'Skipping scraper for {scraper.NAME}')
+            continue
+        else:
+            logger.info(f'Running scraper for {scraper.NAME}')
 
         extracted_data = scraper.extract()
         logger.info(f'Extracted data: {extracted_data} for {scraper.NAME}')

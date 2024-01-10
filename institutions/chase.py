@@ -10,7 +10,7 @@ class ChaseScraper(Scraper):
     def __init__(self):
         super().__init__(ChaseScraper.NAME, ChaseScraper.URL)
 
-    def extract(self) -> float:
+    def extract(self) -> ExtractedResult:
         ua = UserAgent()
         try:
             rates = requests.post(
